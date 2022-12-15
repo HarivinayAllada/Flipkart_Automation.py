@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="56.658" timestamp="2022-12-15T15:15:48.347842" hostname="MSI"><testcase classname="test_Flipkart" name="test_login" time="40.589" /><testcase classname="test_Flipkart" name="test_wishlist" time="7.075" /><testcase classname="test_Flipkart" name="test_addToCart" time="1.708"><failure message="selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {&quot;method&quot;:&quot;xpath&quot;,&quot;selector&quot;:&quot;//div[@class=&quot;_3hscEA&quot; and text()=&quot;OnePlus Nord Buds Bluetooth Headset&quot;]&quot;}&#10;  (Session info: chrome=108.0.5359.100)&#10;Stacktrace:&#10;Backtrace:&#10;&#09;Ordinal0 [0x0117ACD3+2075859]&#10;&#09;Ordinal0 [0x0110EE61+1633889]&#10;&#09;Ordinal0 [0x0100B7BD+571325]&#10;&#09;Ordinal0 [0x0103AC2F+764975]&#10;&#09;Ordinal0 [0x0103AE1B+765467]&#10;&#09;Ordinal0 [0x0106D0F2+970994]&#10;&#09;Ordinal0 [0x01057364+881508]&#10;&#09;Ordinal0 [0x0106B56A+963946]&#10;&#09;Ordinal0 [0x01057136+880950]&#10;&#09;Ordinal0 [0x0102FEFD+720637]&#10;&#09;Ordinal0 [0x01030F3F+724799]&#10;&#09;GetHandleVerifier [0x0142EED2+2769538]&#10;&#09;GetHandleVerifier [0x01420D95+2711877]&#10;&#09;GetHandleVerifier [0x0120A03A+521194]&#10;&#09;GetHandleVerifier [0x01208DA0+516432]&#10;&#09;Ordinal0 [0x0111682C+1665068]&#10;&#09;Ordinal0 [0x0111B128+1683752]&#10;&#09;Ordinal0 [0x0111B215+1683989]&#10;&#09;Ordinal0 [0x01126484+1729668]&#10;&#09;BaseThreadInitThunk [0x770D7BA9+25]&#10;&#09;RtlInitializeExceptionChain [0x77E6BB9B+107]&#10;&#09;RtlClearBits [0x77E6BB1F+191]">test_chrome = None
+
+    def test_addToCart(test_chrome):
+&gt;       driver.find_element(By.XPATH,'//div[@class="_3hscEA" and text()="OnePlus Nord Buds Bluetooth Headset"]').click()
+
+test_Flipkart.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\venv\lib\site-packages\selenium\webdriver\remote\webdriver.py:856: in find_element
+    return self.execute(Command.FIND_ELEMENT, {
+..\venv\lib\site-packages\selenium\webdriver\remote\webdriver.py:429: in execute
+    self.error_handler.check_response(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x000001F5E83F02E0&gt;
+response = {'status': 404, 'value': '{"value":{"error":"no such element","message":"no such element: Unable to locate element: {\...dInitThunk [0x770D7BA9+25]\\n\\tRtlInitializeExceptionChain [0x77E6BB9B+107]\\n\\tRtlClearBits [0x77E6BB1F+191]\\n"}}'}
+
+    def check_response(self, response: Dict[str, Any]) -&gt; None:
+        """
+        Checks that a JSON response from the WebDriver does not have an error.
+    
+        :Args:
+         - response - The JSON response from the WebDriver server as a dictionary
+           object.
+    
+        :Raises: If the response contains an error message.
+        """
+        status = response.get('status', None)
+        if not status or status == ErrorCode.SUCCESS:
+            return
+        value = None
+        message = response.get("message", "")
+        screen: str = response.get("screen", "")
+        stacktrace = None
+        if isinstance(status, int):
+            value_json = response.get('value', None)
+            if value_json and isinstance(value_json, str):
+                import json
+                try:
+                    value = json.loads(value_json)
+                    if len(value.keys()) == 1:
+                        value = value['value']
+                    status = value.get('error', None)
+                    if not status:
+                        status = value.get("status", ErrorCode.UNKNOWN_ERROR)
+                        message = value.get("value") or value.get("message")
+                        if not isinstance(message, str):
+                            value = message
+                            message = message.get('message')
+                    else:
+                        message = value.get('message', None)
+                except ValueError:
+                    pass
+    
+        exception_class: Type[WebDriverException]
+        if status in ErrorCode.NO_SUCH_ELEMENT:
+            exception_class = NoSuchElementException
+        elif status in ErrorCode.NO_SUCH_FRAME:
+            exception_class = NoSuchFrameException
+        elif status in ErrorCode.NO_SUCH_SHADOW_ROOT:
+            exception_class = NoSuchShadowRootException
+        elif status in ErrorCode.NO_SUCH_WINDOW:
+            exception_class = NoSuchWindowException
+        elif status in ErrorCode.STALE_ELEMENT_REFERENCE:
+            exception_class = StaleElementReferenceException
+        elif status in ErrorCode.ELEMENT_NOT_VISIBLE:
+            exception_class = ElementNotVisibleException
+        elif status in ErrorCode.INVALID_ELEMENT_STATE:
+            exception_class = InvalidElementStateException
+        elif status in ErrorCode.INVALID_SELECTOR \
+                or status in ErrorCode.INVALID_XPATH_SELECTOR \
+                or status in ErrorCode.INVALID_XPATH_SELECTOR_RETURN_TYPER:
+            exception_class = InvalidSelectorException
+        elif status in ErrorCode.ELEMENT_IS_NOT_SELECTABLE:
+            exception_class = ElementNotSelectableException
+        elif status in ErrorCode.ELEMENT_NOT_INTERACTABLE:
+            exception_class = ElementNotInteractableException
+        elif status in ErrorCode.INVALID_COOKIE_DOMAIN:
+            exception_class = InvalidCookieDomainException
+        elif status in ErrorCode.UNABLE_TO_SET_COOKIE:
+            exception_class = UnableToSetCookieException
+        elif status in ErrorCode.TIMEOUT:
+            exception_class = TimeoutException
+        elif status in ErrorCode.SCRIPT_TIMEOUT:
+            exception_class = TimeoutException
+        elif status in ErrorCode.UNKNOWN_ERROR:
+            exception_class = WebDriverException
+        elif status in ErrorCode.UNEXPECTED_ALERT_OPEN:
+            exception_class = UnexpectedAlertPresentException
+        elif status in ErrorCode.NO_ALERT_OPEN:
+            exception_class = NoAlertPresentException
+        elif status in ErrorCode.IME_NOT_AVAILABLE:
+            exception_class = ImeNotAvailableException
+        elif status in ErrorCode.IME_ENGINE_ACTIVATION_FAILED:
+            exception_class = ImeActivationFailedException
+        elif status in ErrorCode.MOVE_TARGET_OUT_OF_BOUNDS:
+            exception_class = MoveTargetOutOfBoundsException
+        elif status in ErrorCode.JAVASCRIPT_ERROR:
+            exception_class = JavascriptException
+        elif status in ErrorCode.SESSION_NOT_CREATED:
+            exception_class = SessionNotCreatedException
+        elif status in ErrorCode.INVALID_ARGUMENT:
+            exception_class = InvalidArgumentException
+        elif status in ErrorCode.NO_SUCH_COOKIE:
+            exception_class = NoSuchCookieException
+        elif status in ErrorCode.UNABLE_TO_CAPTURE_SCREEN:
+            exception_class = ScreenshotException
+        elif status in ErrorCode.ELEMENT_CLICK_INTERCEPTED:
+            exception_class = ElementClickInterceptedException
+        elif status in ErrorCode.INSECURE_CERTIFICATE:
+            exception_class = InsecureCertificateException
+        elif status in ErrorCode.INVALID_COORDINATES:
+            exception_class = InvalidCoordinatesException
+        elif status in ErrorCode.INVALID_SESSION_ID:
+            exception_class = InvalidSessionIdException
+        elif status in ErrorCode.UNKNOWN_METHOD:
+            exception_class = UnknownMethodException
+        else:
+            exception_class = WebDriverException
+        if not value:
+            value = response['value']
+        if isinstance(value, str):
+            raise exception_class(value)
+        if message == "" and 'message' in value:
+            message = value['message']
+    
+        screen = None  # type: ignore[assignment]
+        if 'screen' in value:
+            screen = value['screen']
+    
+        stacktrace = None
+        st_value = value.get('stackTrace') or value.get('stacktrace')
+        if st_value:
+            if isinstance(st_value, str):
+                stacktrace = st_value.split('\n')
+            else:
+                stacktrace = []
+                try:
+                    for frame in st_value:
+                        line = frame.get("lineNumber", "")
+                        file = frame.get("fileName", "&lt;anonymous&gt;")
+                        if line:
+                            file = f"{file}:{line}"
+                        meth = frame.get('methodName', '&lt;anonymous&gt;')
+                        if 'className' in frame:
+                            meth = "{}.{}".format(frame['className'], meth)
+                        msg = "    at %s (%s)"
+                        msg = msg % (meth, file)
+                        stacktrace.append(msg)
+                except TypeError:
+                    pass
+        if exception_class == UnexpectedAlertPresentException:
+            alert_text = None
+            if 'data' in value:
+                alert_text = value['data'].get('text')
+            elif 'alert' in value:
+                alert_text = value['alert'].get('text')
+            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here
+&gt;       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//div[@class="_3hscEA" and text()="OnePlus Nord Buds Bluetooth Headset"]"}
+E         (Session info: chrome=108.0.5359.100)
+E       Stacktrace:
+E       Backtrace:
+E       	Ordinal0 [0x0117ACD3+2075859]
+E       	Ordinal0 [0x0110EE61+1633889]
+E       	Ordinal0 [0x0100B7BD+571325]
+E       	Ordinal0 [0x0103AC2F+764975]
+E       	Ordinal0 [0x0103AE1B+765467]
+E       	Ordinal0 [0x0106D0F2+970994]
+E       	Ordinal0 [0x01057364+881508]
+E       	Ordinal0 [0x0106B56A+963946]
+E       	Ordinal0 [0x01057136+880950]
+E       	Ordinal0 [0x0102FEFD+720637]
+E       	Ordinal0 [0x01030F3F+724799]
+E       	GetHandleVerifier [0x0142EED2+2769538]
+E       	GetHandleVerifier [0x01420D95+2711877]
+E       	GetHandleVerifier [0x0120A03A+521194]
+E       	GetHandleVerifier [0x01208DA0+516432]
+E       	Ordinal0 [0x0111682C+1665068]
+E       	Ordinal0 [0x0111B128+1683752]
+E       	Ordinal0 [0x0111B215+1683989]
+E       	Ordinal0 [0x01126484+1729668]
+E       	BaseThreadInitThunk [0x770D7BA9+25]
+E       	RtlInitializeExceptionChain [0x77E6BB9B+107]
+E       	RtlClearBits [0x77E6BB1F+191]
+
+..\venv\lib\site-packages\selenium\webdriver\remote\errorhandler.py:243: NoSuchElementException</failure></testcase><testcase classname="test_Flipkart" name="test_check" time="1.835" /><testcase classname="test_Flipkart" name="test_close" time="4.023" /></testsuite></testsuites>
