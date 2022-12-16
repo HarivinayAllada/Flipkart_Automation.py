@@ -61,3 +61,5 @@ def test_check(test_chrome):
 def test_close(test_chrome):
     driver.close()
     driver.quit()
+    
+    
